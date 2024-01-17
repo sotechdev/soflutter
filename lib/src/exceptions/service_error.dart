@@ -1,4 +1,4 @@
-import 'package:soflutter/exceptions/soflutter_exception.dart';
+import 'package:soflutter/src/exceptions/soflutter_exception.dart';
 
 /// A error caused by some access to services
 class ServiceError extends SOFlutterException {
