@@ -16,17 +16,18 @@ export 'views/error_view.dart';
 export 'views/text_input.dart';
 
 class SOFlutter {
-  static TService Function<TService>()? _serviceProvider;
+  static TService Function<TService extends Object>()? _serviceProvider;
 
-  static TService Function<TService>()? get serviceProvider => _serviceProvider;
+  static TService Function<TService extends Object>()? get serviceProvider =>
+      _serviceProvider;
 
   static addServiceProvider(
-    TService Function<TService>()? serviceProvider,
+    TService Function<TService extends Object>()? serviceProvider,
   ) {
     _serviceProvider = serviceProvider;
   }
 
-  static TService get<TService>(
+  static TService get<TService extends Object>(
       {TService Function<TService>()? serviceProvider}) {
     if (serviceProvider != null) {
       return serviceProvider<TService>();
