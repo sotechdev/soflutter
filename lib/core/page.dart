@@ -3,9 +3,9 @@ import 'package:logger/logger.dart';
 import 'package:soflutter/soflutter.dart';
 
 /// A base page with logger and controller implemented
-abstract class Page<TWidget extends StatefulWidget, TController extends Object>
-    extends State<TWidget> {
-  Page({this.serviceProvider}) {
+abstract class BasePage<TWidget extends StatefulWidget,
+    TController extends Object> extends State<TWidget> {
+  BasePage({this.serviceProvider}) {
     _controller = SOFlutter.get<TController>(serviceProvider: serviceProvider);
   }
 

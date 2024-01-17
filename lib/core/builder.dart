@@ -7,9 +7,9 @@ import 'controller.dart';
 import 'state.dart';
 
 /// A builder that returns a Listenable Builder
-class Builder<TController extends Controller<TState>, TState>
+class BaseBuilder<TController extends Controller<TState>, TState>
     extends StatelessWidget {
-  const Builder({
+  const BaseBuilder({
     super.key,
     required this.controller,
     required this.builder,
