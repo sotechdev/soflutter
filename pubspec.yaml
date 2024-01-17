@@ -1,7 +1,8 @@
 name: soflutter
 description: "A essential library to create enterprise apps."
 version: 0.0.2
-homepage:
+homepage: https://github.com/sotechdev/soflutter
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
