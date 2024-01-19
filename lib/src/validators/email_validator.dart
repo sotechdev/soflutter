@@ -8,7 +8,7 @@ final class EmailValidator implements IValidator {
     final regex = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     if (value == null || !regex.hasMatch(value)) {
-      return message ?? 'Invalid email';
+      return message ?? 'E-mail inválido';
     }
     return null;
   }

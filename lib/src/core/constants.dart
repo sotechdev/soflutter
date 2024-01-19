@@ -22,7 +22,8 @@ class LibraryConstants {
       return _serviceProvider!<TService>();
     } else {
       throw ServiceError(
-          message: 'No service provider found! Try call addServiceProvider');
+          message:
+              'Nenhum provedor de serviços encontrado! Tente chamar o método addServiceProvider');
     }
   }
 }

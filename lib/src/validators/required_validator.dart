@@ -10,7 +10,7 @@ final class RequiredValidator implements IValidator {
   @override
   String? call(String? value) {
     if (value == null || value.isEmpty) {
-      return message ?? 'Required field';
+      return message ?? 'Campo obrigatório';
     }
     return null;
   }
