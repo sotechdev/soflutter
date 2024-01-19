@@ -12,7 +12,7 @@ class SOListView<TData> extends StatefulWidget {
 
   final List<TData> items;
   final Future<List<TData>> Function()? loadMore;
-  final Widget? Function(TData) itemBuilder;
+  final Widget? Function(BuildContext, TData) itemBuilder;
   final Widget? header;
 
   @override
@@ -49,7 +49,8 @@ class _SOListViewState<TData> extends State<SOListView<TData>> {
             controller: controller,
             child: ListView.builder(
               controller: controller,
-              itemBuilder: (_, index) => widget.itemBuilder(_items[index]),
+              itemBuilder: (context, index) =>
+                  widget.itemBuilder(context, _items[index]),
               itemCount: _items.length,
             ),
           ),
