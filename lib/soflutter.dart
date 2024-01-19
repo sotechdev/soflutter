@@ -16,6 +16,7 @@ export 'src/validators/required_validator.dart';
 
 export 'src/views/busy_indicator.dart';
 export 'src/views/error_view.dart';
+export 'src/views/list.dart';
 export 'src/views/text_input.dart';
 
 class SOFlutter {
