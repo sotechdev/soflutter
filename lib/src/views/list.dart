@@ -36,7 +36,7 @@ class _SOListViewState<TData> extends State<SOListView<TData>> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: [
         if (widget.header != null)
           SizedBox(
