@@ -1,7 +1,6 @@
 library soflutter;
 
 import 'package:soflutter/src/core/constants.dart';
-import 'package:soflutter/src/di/injector.dart';
 
 export 'src/core/builder.dart';
 export 'src/core/controller.dart';
@@ -23,7 +22,9 @@ export 'src/views/list.dart';
 export 'src/views/text_input.dart';
 
 class SOFlutter {
-  static setInjector<TInjector extends Injector>(TInjector injector) {
-    LibraryConstants.injector = injector;
+  static setServiceProvider(
+    TService Function<TService extends Object>()? serviceProvider,
+  ) {
+    LibraryConstants.setServiceProvider(serviceProvider);
   }
 }
