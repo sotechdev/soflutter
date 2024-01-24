@@ -19,7 +19,7 @@ class BaseBuilder<TController extends Controller<TState>, TState>
   final TController controller;
   //final TState state;
   final Widget Function(BuildContext, TState) builder;
-  final Widget Function(BuildContext context)? onError;
+  final Widget Function(BuildContext context, Object? error)? onError;
   final Widget Function(BuildContext context)? onLoading;
 
   @override
@@ -35,13 +35,9 @@ class BaseBuilder<TController extends Controller<TState>, TState>
           return BusyIndicator(state.message);
         } else if (state is ErrorState) {
           if (onError != null) {
-            return onError!.call(context);
+            return onError!.call(context, state.error);
           } else {
             logger.e(state.message);
-            showDialog(
-              context: context,
-              builder: (context) => Text(state.message),
-            );
             return ErrorView(state.message);
           }
         }

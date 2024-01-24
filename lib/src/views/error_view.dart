@@ -7,6 +7,9 @@ class ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(message);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Center(child: Text(message)),
+    );
   }
 }

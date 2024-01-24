@@ -1,8 +1,9 @@
 sealed class BaseState {}
 
 abstract class ErrorState {
-  ErrorState(this.message);
+  ErrorState(this.message, {this.error});
   final String message;
+  final Object? error;
 }
 
 abstract class SuccessState<TModel> {
