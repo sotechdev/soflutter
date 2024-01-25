@@ -4,9 +4,10 @@ import 'package:soflutter/src/core/constants.dart';
 
 export 'src/core/builder.dart';
 export 'src/core/controller.dart';
-export 'src/core/logger.dart' show Logger;
 export 'src/core/page.dart';
 export 'src/core/state.dart';
+
+export 'src/di/injector.dart';
 
 export 'src/exceptions/soflutter_exception.dart';
 export 'src/exceptions/service_error.dart';
