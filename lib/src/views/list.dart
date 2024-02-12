@@ -44,7 +44,7 @@ class _SOListViewState<TData> extends State<SOListView<TData>> {
             child: widget.header,
           ),
         Padding(
-          padding: const EdgeInsets.only(top: 50),
+          padding: EdgeInsets.only(top: widget.header != null ? 50 : 0),
           child: Scrollbar(
             controller: controller,
             child: ListView.builder(
