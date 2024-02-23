@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class SOListView<TData> extends StatefulWidget {
-  const SOListView({
+  SOListView({
     Key? key,
     required this.items,
     required this.itemBuilder,
@@ -10,13 +10,23 @@ class SOListView<TData> extends StatefulWidget {
     this.header,
   }) : super(key: key);
 
+  final _state = _SOListViewState<TData>();
   final List<TData> items;
   final Future<List<TData>> Function()? loadMore;
   final Widget? Function(BuildContext, TData) itemBuilder;
   final Widget? header;
 
+  void scrollToTop() {
+    _state.scrollToTop();
+  }
+
+  void scrollToBottom() {
+    _state.scrollToBottom();
+  }
+
   @override
-  _SOListViewState<TData> createState() => _SOListViewState<TData>();
+  // ignore: no_logic_in_create_state
+  _SOListViewState<TData> createState() => _state;
 }
 
 class _SOListViewState<TData> extends State<SOListView<TData>> {
@@ -61,6 +71,22 @@ class _SOListViewState<TData> extends State<SOListView<TData>> {
             child: Center(child: CircularProgressIndicator()),
           ),
       ],
+    );
+  }
+
+  void scrollToTop() {
+    controller.animateTo(
+      controller.position.minScrollExtent,
+      duration: const Duration(seconds: 2),
+      curve: Curves.fastOutSlowIn,
+    );
+  }
+
+  void scrollToBottom() {
+    controller.animateTo(
+      controller.position.maxScrollExtent,
+      duration: const Duration(seconds: 2),
+      curve: Curves.fastOutSlowIn,
     );
   }
 
