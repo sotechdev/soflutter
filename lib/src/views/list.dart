@@ -8,6 +8,7 @@ class SOListView<TData> extends StatefulWidget {
     required this.itemBuilder,
     this.loadMore,
     this.header,
+    this.headerHeight = 50,
   }) : super(key: key);
 
   final _state = _SOListViewState<TData>();
@@ -15,6 +16,7 @@ class SOListView<TData> extends StatefulWidget {
   final Future<List<TData>> Function()? loadMore;
   final Widget? Function(BuildContext, TData) itemBuilder;
   final Widget? header;
+  final double headerHeight;
 
   void scrollToTop() {
     _state.scrollToTop();
@@ -50,11 +52,12 @@ class _SOListViewState<TData> extends State<SOListView<TData>> {
       children: [
         if (widget.header != null)
           SizedBox(
-            height: 50,
+            height: widget.headerHeight,
             child: widget.header,
           ),
         Padding(
-          padding: EdgeInsets.only(top: widget.header != null ? 50 : 0),
+          padding: EdgeInsets.only(
+              top: widget.header != null ? widget.headerHeight : 0),
           child: Scrollbar(
             controller: controller,
             child: ListView.builder(
