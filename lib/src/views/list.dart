@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:soflutter/src/core/logging.dart';
 
 class SOListView<TData> extends StatefulWidget {
-  SOListView({
+  const SOListView({
     Key? key,
     required this.items,
     required this.itemBuilder,
@@ -11,28 +11,17 @@ class SOListView<TData> extends StatefulWidget {
     this.headerHeight = 50,
   }) : super(key: key);
 
-  final _state = _SOListViewState<TData>();
   final List<TData> items;
   final Future<List<TData>> Function()? loadMore;
   final Widget? Function(BuildContext, TData) itemBuilder;
   final Widget? header;
   final double headerHeight;
 
-  void scrollToTop() {
-    _state.scrollToTop();
-  }
-
-  void scrollToBottom() {
-    _state.scrollToBottom();
-  }
-
   @override
-  // ignore: no_logic_in_create_state
-  _SOListViewState<TData> createState() => _state;
+  _SOListViewState<TData> createState() => _SOListViewState<TData>();
 }
 
-class _SOListViewState<TData> extends State<SOListView<TData>> {
-  final logger = Logger();
+class _SOListViewState<TData> extends State<SOListView<TData>> with Logging {
   final controller = ScrollController();
 
   List<TData> _items = [];
@@ -115,7 +104,7 @@ class _SOListViewState<TData> extends State<SOListView<TData>> {
         });
       }
     } catch (e) {
-      logger.e('Erro ao carregar dados: $e');
+      logger.error('Erro ao carregar dados: $e', error: e);
     }
     setState(() {
       _isLoadMoreRunning = false;

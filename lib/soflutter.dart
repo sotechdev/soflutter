@@ -1,7 +1,5 @@
 library soflutter;
 
-import 'package:soflutter/src/core/constants.dart';
-
 export 'src/core/builder.dart';
 export 'src/core/controller.dart';
 export 'src/core/page.dart';
@@ -18,11 +16,8 @@ export 'src/views/busy_indicator.dart';
 export 'src/views/error_view.dart';
 export 'src/views/list.dart';
 export 'src/views/text_input.dart';
-
-class SOFlutter {
-  static setServiceProvider(
-    TService Function<TService extends Object>()? serviceProvider,
-  ) {
-    LibraryConstants.setServiceProvider(serviceProvider);
-  }
-}
+export 'src/core/provider.dart';
+export 'src/core/logging.dart';
+export 'src/core/consumer.dart';
+// ignore: unused_import
+import 'package:flutter_bloc/flutter_bloc.dart' hide WatchContext, ReadContext;
