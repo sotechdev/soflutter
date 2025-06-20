@@ -1,6 +1,6 @@
 name: soflutter
 description: "A essential library to create enterprise apps."
-version: 0.0.3
+version: 0.2.0
 homepage: https://github.com/sotechdev/soflutter
 publish_to: https://dart.pkg.jetbrains.space/sotech/p/main/soflutter/
 
@@ -20,3 +20,6 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.0
 
+flutter:
+  generate: true
+  uses-material-design: true
