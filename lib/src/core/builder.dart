@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' hide WatchContext, ReadContext;
 import 'package:soflutter/src/core/logging.dart';
+import 'package:soflutter/src/core/observer.dart';
 import 'package:soflutter/src/views/busy_indicator.dart';
 import 'package:soflutter/src/views/error_view.dart';
 
@@ -36,7 +37,9 @@ class BaseBuilder<TController extends Controller<TState>, TState>
     this.buildWhen,
     this.onError,
     this.onLoading,
-  });
+  }) {
+    Bloc.observer = AppObserver();
+  }
 
   final WidgetBuilder<TState> builder;
   final TController? controller;

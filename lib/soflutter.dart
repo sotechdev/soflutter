@@ -21,3 +21,4 @@ export 'src/core/logging.dart';
 export 'src/core/consumer.dart';
 // ignore: unused_import
 import 'package:flutter_bloc/flutter_bloc.dart' hide WatchContext, ReadContext;
+import 'package:soflutter/src/core/observer.dart';
