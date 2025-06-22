@@ -9,38 +9,63 @@ import 'logging.dart';
 
 /// A builder that returns a ScopedBuilder
 class SOPageBuilder<TController extends SOController<TData>, TData>
-    extends StatelessWidget with Logging {
-  SOPageBuilder({
+    extends StatefulWidget {
+  const SOPageBuilder({
     super.key,
     required this.builder,
     this.onError,
     this.onLoading,
   });
-  late final TController controller;
-  final Widget Function(BuildContext context, TData state) builder;
+  final Widget Function(
+    BuildContext context,
+    TController controller,
+    TData state,
+  ) builder;
   final Widget Function(BuildContext context, dynamic error)? onError;
   final Widget Function(BuildContext context)? onLoading;
 
   @override
+  State<SOPageBuilder<TController, TData>> createState() =>
+      _SOPageBuilderState<TController, TData>();
+}
+
+class _SOPageBuilderState<TController extends SOController<TData>, TData>
+    extends State<SOPageBuilder<TController, TData>> with Logging {
+  late final Future<void> Function() _disposeObserver;
+
+  late final TController controller;
+
+  @override
   Widget build(BuildContext context) {
     controller = context.get<TController>();
-    return ScopedBuilder(
+    _disposeObserver = controller.observer(
+      onError: (error) => logger.error('Error', error: error),
+      onLoading: (loading) => logger.debug('Loading'),
+      onState: (state) => logger.debug('State'),
+    );
+    return ScopedBuilder<TController, TData>(
       store: controller,
       onLoading: (context) {
-        if (onLoading != null) {
-          return onLoading!(context);
+        if (widget.onLoading != null) {
+          return widget.onLoading!(context);
         } else {
           return const BusyIndicator('Carregando...');
         }
       },
       onError: (context, error) {
-        if (onError != null) {
-          return onError!(context, error);
+        if (widget.onError != null) {
+          return widget.onError!(context, error);
         } else {
           return ErrorView(error: error);
         }
       },
-      onState: builder,
+      onState: (context, state) => widget.builder(context, controller, state),
     );
+  }
+
+  @override
+  void dispose() {
+    _disposeObserver();
+    super.dispose();
   }
 }

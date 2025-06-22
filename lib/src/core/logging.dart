@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:logging/logging.dart';
+import 'package:soflutter/soflutter.dart';
 
 abstract class AppLogger {
   void verbose(Object message, {Object? error, StackTrace? stackTrace});
@@ -10,7 +13,19 @@ abstract class AppLogger {
 }
 
 class _Logger implements AppLogger {
-  _Logger(Type runtimeType) : _logger = Logger(runtimeType.toString());
+  _Logger(Type runtimeType) : _logger = Logger(runtimeType.toString()) {
+    Logger.root.level = isDebug ? Level.ALL : Level.WARNING;
+    Logger.root.onRecord.listen((record) {
+      log(
+        record.message,
+        time: record.time,
+        level: record.level.value,
+        name: record.loggerName,
+        error: record.error,
+        stackTrace: record.stackTrace,
+      );
+    });
+  }
 
   final Logger _logger;
 
@@ -46,7 +61,7 @@ class _Logger implements AppLogger {
 }
 
 mixin Logging {
-  late final _Logger? _logger;
+  _Logger? _logger;
 
   AppLogger get logger => _logger ??= _Logger(runtimeType);
 }

@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:soflutter/soflutter.dart';
 
-class SOListView<TData> extends StatefulWidget with Logging {
-  SOListView({
+class SOListView<TData> extends StatefulWidget {
+  const SOListView({
     Key? key,
     required this.items,
     required this.itemBuilder,
@@ -11,24 +10,14 @@ class SOListView<TData> extends StatefulWidget with Logging {
     this.headerHeight = 50,
   }) : super(key: key);
 
-  final _state = _SOListViewState<TData>();
   final List<TData> items;
   final Future<List<TData>> Function()? loadMore;
   final Widget? Function(BuildContext, TData) itemBuilder;
   final Widget? header;
   final double headerHeight;
 
-  void scrollToTop() {
-    _state.scrollToTop();
-  }
-
-  void scrollToBottom() {
-    _state.scrollToBottom();
-  }
-
   @override
-  // ignore: no_logic_in_create_state
-  _SOListViewState<TData> createState() => _state;
+  _SOListViewState<TData> createState() => _SOListViewState<TData>();
 }
 
 class _SOListViewState<TData> extends State<SOListView<TData>> with Logging {
