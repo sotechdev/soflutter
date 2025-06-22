@@ -1,51 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:flutter_triple/flutter_triple.dart';
+import 'package:soflutter/src/extensions/build_context_extensions.dart';
 import 'package:soflutter/src/views/busy_indicator.dart';
 import 'package:soflutter/src/views/error_view.dart';
 
 import 'controller.dart';
-import 'state.dart';
+import 'logging.dart';
 
-/// A builder that returns a Listenable Builder
-class BaseBuilder<TController extends Controller<TState>, TState>
-    extends StatelessWidget {
-  const BaseBuilder({
+/// A builder that returns a ScopedBuilder
+class SOPageBuilder<TController extends SOController<TData>, TData>
+    extends StatelessWidget with Logging {
+  SOPageBuilder({
     super.key,
-    required this.controller,
     required this.builder,
     this.onError,
     this.onLoading,
   });
-  final TController controller;
-  //final TState state;
-  final Widget Function(BuildContext, TState) builder;
-  final Widget? Function(BuildContext context, Object? error)? onError;
+  late final TController controller;
+  final Widget Function(BuildContext context, TData state) builder;
+  final Widget Function(BuildContext context, dynamic error)? onError;
   final Widget Function(BuildContext context)? onLoading;
 
   @override
   Widget build(BuildContext context) {
-    Logger logger = Logger();
-    return ValueListenableBuilder(
-      valueListenable: controller,
-      builder: (context, state, child) {
-        if (state is LoadingState) {
-          if (onLoading != null) {
-            return onLoading!(context);
-          }
-          return BusyIndicator(state.message);
-        } else if (state is ErrorState) {
-          if (onError != null) {
-            final widget = onError!.call(context, state.error);
-            if (widget != null) {
-              return widget;
-            }
-          } else {
-            logger.e(state.message);
-            return ErrorView(state.message);
-          }
+    controller = context.get<TController>();
+    return ScopedBuilder(
+      store: controller,
+      onLoading: (context) {
+        if (onLoading != null) {
+          return onLoading!(context);
+        } else {
+          return const BusyIndicator('Carregando...');
         }
-        return builder(context, state);
       },
+      onError: (context, error) {
+        if (onError != null) {
+          return onError!(context, error);
+        } else {
+          return ErrorView(error: error);
+        }
+      },
+      onState: builder,
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:soflutter/soflutter.dart';
 
-class SOListView<TData> extends StatefulWidget {
+class SOListView<TData> extends StatefulWidget with Logging {
   SOListView({
     Key? key,
     required this.items,
@@ -31,8 +31,7 @@ class SOListView<TData> extends StatefulWidget {
   _SOListViewState<TData> createState() => _state;
 }
 
-class _SOListViewState<TData> extends State<SOListView<TData>> {
-  final logger = Logger();
+class _SOListViewState<TData> extends State<SOListView<TData>> with Logging {
   final controller = ScrollController();
 
   List<TData> _items = [];
@@ -115,7 +114,10 @@ class _SOListViewState<TData> extends State<SOListView<TData>> {
         });
       }
     } catch (e) {
-      logger.e('Erro ao carregar dados: $e');
+      logger.error(
+        'Erro ao carregar dados: $e',
+        error: e,
+      );
     }
     setState(() {
       _isLoadMoreRunning = false;

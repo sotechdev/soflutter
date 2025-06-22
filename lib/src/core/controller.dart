@@ -1,12 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_triple/flutter_triple.dart';
 
 /// A controller that controls states
-class Controller<TState> extends ValueNotifier<TState> {
-  Controller(TState state) : super(state);
+class SOController<TState> extends Store<TState> {
+  SOController(TState state) : super(state);
 
   /// Emit a state and notify listeners
-  void emit(TState state) {
-    super.value = state;
-    notifyListeners();
-  }
+  void emit(TState state) => update(state);
 }
