@@ -5,7 +5,7 @@ import '../controllers/async_state.dart';
 
 class AsyncControllerBuilder<D> extends StatelessWidget {
   final AsyncController<D> controller;
-  final Widget Function(BuildContext, AsyncState state, D? data)? builder;
+  final Widget Function(BuildContext context, AsyncState state, D? data)? builder;
   final Widget? initial;
   final Widget? loading;
   final Widget? error;
