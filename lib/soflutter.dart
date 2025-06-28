@@ -11,6 +11,7 @@ export 'src/builders/multi_controller_builder.dart';
 export 'src/controllers/async_controller.dart';
 export 'src/controllers/async_controller_when_extension.dart';
 export 'src/controllers/async_controller_widget_extension.dart';
+export 'src/controllers/async_observer.dart';
 export 'src/controllers/async_state.dart';
 export 'src/controllers/controller.dart';
 
