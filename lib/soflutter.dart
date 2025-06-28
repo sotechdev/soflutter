@@ -1,7 +1,13 @@
 library soflutter;
 
 export 'package:flutter/material.dart';
-export 'package:auto_injector/auto_injector.dart' show BindConfig;
+export 'package:auto_injector/auto_injector.dart'
+    show
+        BindConfig,
+        changeParam,
+        DisposeCallback,
+        NotifierCallback,
+        ParamTransform;
 
 export 'src/builders/async_controller_builder.dart';
 export 'src/builders/async_controller_when_builder.dart';
