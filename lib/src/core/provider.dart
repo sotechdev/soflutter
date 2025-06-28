@@ -1,5 +1,7 @@
 import 'package:auto_injector/auto_injector.dart'
-    show AutoInjector, BindConfig, Bind, ParamTransform;
+    show AutoInjector, Bind, BindConfig, ParamTransform;
+import 'package:soflutter/src/controllers/async_controller.dart';
+import 'package:soflutter/src/controllers/controller.dart';
 
 class ServiceProvider {
   ServiceProvider._();
@@ -86,6 +88,28 @@ class ServiceProvider {
       _injector.addLazySingleton(constructor, config: config, key: key);
 
   void addBind<T>(Bind<T> bind) => _injector.addBind(bind);
+
+  void addController<T extends Controller>(
+    Function constructor, {
+    String? key,
+  }) =>
+      _injector.addLazySingleton<T>(constructor,
+          key: key,
+          config: BindConfig<T>(
+            notifier: (controller) => controller,
+            onDispose: (controller) => controller.dispose(),
+          ));
+
+  void addAsyncController<T extends AsyncController>(
+    Function constructor, {
+    String? key,
+  }) =>
+      _injector.addLazySingleton<T>(constructor,
+          key: key,
+          config: BindConfig<T>(
+            notifier: (controller) => controller,
+            onDispose: (controller) => controller.dispose(),
+          ));
 
   void commit() => _injector.commit();
 
