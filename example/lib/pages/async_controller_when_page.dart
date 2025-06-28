@@ -1,7 +1,8 @@
 import 'package:soflutter/soflutter.dart';
 
 class AsyncControllerWhenPage extends StatelessWidget {
-  final AsyncController<List<String>> listController = AsyncController<List<String>>();
+  final AsyncController<List<String>> listController =
+      AsyncController<List<String>>();
 
   AsyncControllerWhenPage({super.key});
 
@@ -27,7 +28,10 @@ class AsyncControllerWhenPage extends StatelessWidget {
               child: AsyncControllerWhenBuilder<List<String>>(
                 controller: listController,
                 initial: () => const Center(child: Text('No data loaded yet')),
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () => BusyIndicator(
+                  "Loading data",
+                  onCancel: listController.cancel,
+                ),
                 success: (data) => ListView.builder(
                   itemCount: data.length,
                   itemBuilder: (context, index) => ListTile(
@@ -39,7 +43,11 @@ class AsyncControllerWhenPage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.error_outline, color: Colors.red, size: 50),
+                      const Icon(
+                        Icons.error_outline,
+                        color: Colors.red,
+                        size: 50,
+                      ),
                       const SizedBox(height: 20),
                       Text(
                         error.toString(),

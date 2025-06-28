@@ -1,15 +1,15 @@
-
-
 import 'package:soflutter/soflutter.dart';
 
 class AsyncControllerBuilderPage extends StatefulWidget {
   const AsyncControllerBuilderPage({super.key});
 
   @override
-  State<AsyncControllerBuilderPage> createState() => _AsyncControllerBuilderPageState();
+  State<AsyncControllerBuilderPage> createState() =>
+      _AsyncControllerBuilderPageState();
 }
 
-class _AsyncControllerBuilderPageState extends State<AsyncControllerBuilderPage> {
+class _AsyncControllerBuilderPageState
+    extends State<AsyncControllerBuilderPage> {
   final AsyncController<String> dataController = AsyncController<String>();
 
   Future<String> _fetchData(CancellationToken cancellationToken) async {
@@ -39,11 +39,18 @@ class _AsyncControllerBuilderPageState extends State<AsyncControllerBuilderPage>
                 controller: dataController,
                 builder: (context, state, data) {
                   return Center(
-                    child: Text('Generic builder: $state - ${data ?? "no data"}'),
+                    child: Text(
+                      'Generic builder: $state - ${data ?? "no data"}',
+                    ),
                   );
                 },
-                initial: const Center(child: Text('Press the button to load data')),
-                loading: const Center(child: CircularProgressIndicator()),
+                initial: const Center(
+                  child: Text('Press the button to load data'),
+                ),
+                loading: BusyIndicator(
+                  "Loading data",
+                  onCancel: dataController.cancel,
+                ),
                 error: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -63,7 +70,11 @@ class _AsyncControllerBuilderPageState extends State<AsyncControllerBuilderPage>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.check_circle, color: Colors.green, size: 50),
+                        const Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                          size: 50,
+                        ),
                         const SizedBox(height: 20),
                         Text(
                           dataController.currentData ?? 'No data',

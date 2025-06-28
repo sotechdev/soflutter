@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:soflutter/src/controllers/async_observer.dart';
-import 'package:soflutter/src/core/multi_stream_subscription.dart';
 
 import '../core/core.dart';
 import '../exceptions/cancelled_exception.dart';
@@ -17,7 +16,7 @@ class AsyncController<T> with Logging {
   T? _data;
   Exception? _error;
   StackTrace? _stackTrace;
-  CancellationToken? _currentToken;
+  CancellationTokenSource? _currentTokenSource;
 
   final _observers = observers;
 
@@ -28,30 +27,38 @@ class AsyncController<T> with Logging {
   Future execute(
     Future<T> Function(CancellationToken token) operation, {
     CancellationToken? token,
-        bool throwOnError = false,
+    bool throwOnError = false,
+    Duration? timeout,
   }) async {
     logger.verbose('[AsyncController] Starting async operation');
 
-    if (_state == AsyncState.loading && _currentToken != null) {
+    if (_state == AsyncState.loading) {
       logger.verbose('[AsyncController] Cancelling previous operation');
-      _currentToken!.cancel();
+      _currentTokenSource?.cancel();
     }
 
-    final newToken = token ?? CancellationToken();
-    _currentToken = newToken;
+    final timeOutToken = CancellationTokenSource();
+    if (timeout != null) {
+      timeOutToken.cancelAfter(timeout);
+    }
 
+    final effectiveToken = token != null
+        ? CancellationTokenSource.createLinkedTokenSource(
+            [token, timeOutToken.token]).token
+        : timeOutToken.token;
+
+    _currentTokenSource = timeOutToken;
     _updateState(AsyncState.loading);
 
     try {
       logger.verbose('[AsyncController] Executing operation');
       final result = await Future.any([
-        operation(newToken),
-        newToken.onCancelled.then((_) => throw CancelledException()),
+        operation(effectiveToken),
+        effectiveToken.onCancelled.then((_) => throw CancelledException()),
       ]);
 
       logger.verbose('[AsyncController] Operation completed successfully');
       _updateState(AsyncState.success, data: result);
-      return result;
     } on CancelledException {
       logger.verbose('[AsyncController] Operation was cancelled');
       _updateState(AsyncState.cancelled);
@@ -63,8 +70,9 @@ class AsyncController<T> with Logging {
       _updateState(AsyncState.error, error: exception, stackTrace: st);
       if (throwOnError) rethrow;
     } finally {
-      if (_currentToken == newToken) {
-        _currentToken = null;
+      if (_currentTokenSource?.token == effectiveToken) {
+        _currentTokenSource?.dispose();
+        _currentTokenSource = null;
       }
     }
   }
@@ -95,53 +103,53 @@ class AsyncController<T> with Logging {
     void Function(AsyncState state)? onState,
     void Function(T? data)? onData,
     void Function(Exception? error)? onError,
-  }){
+  }) {
     final subscritions = <StreamSubscription>[];
 
-    if (onState != null){
-      subscritions.add(stateStream.listen(
-        onState));
+    if (onState != null) {
+      subscritions.add(stateStream.listen(onState));
     }
-    if (onData != null){
+    if (onData != null) {
       subscritions.add(dataStream.listen(onData));
     }
-    if (onError != null){
+    if (onError != null) {
       subscritions.add(errorStream.listen(onError));
     }
     return MultiStreamSubscription<AsyncState>(subscritions)
       ..onData((state) {})
-      ..onError((error){});
+      ..onError((error) {});
   }
 
-  void addObserver(AsyncObserver<T> observer){
+  void addObserver(AsyncObserver<T> observer) {
     _observers.add(observer);
   }
 
-  void removeObserver(AsyncObserver<T> observer){
+  void removeObserver(AsyncObserver<T> observer) {
     _observers.remove(observer);
   }
 
-  void _notifyObservers(){
-    for (final observer in _observers){
+  void _notifyObservers() {
+    for (final observer in _observers) {
       observer.onState(_state);
       observer.onData(_data);
-      if (_state == AsyncState.error){
+      if (_state == AsyncState.error) {
         observer.onError(_error);
       }
     }
   }
 
   void cancel() {
-    if (_state == AsyncState.loading && _currentToken != null) {
+    if (_state == AsyncState.loading) {
       logger.verbose('[AsyncController] Manually cancelling current operation');
-      _currentToken!.cancel();
+      _currentTokenSource!.cancel();
     }
   }
 
   void reset() {
     logger.verbose('[AsyncController] Resetting controller');
     _updateState(AsyncState.initial);
-    _currentToken = null;
+    _currentTokenSource?.dispose();
+    _currentTokenSource = null;
   }
 
   void dispose() {
@@ -150,6 +158,8 @@ class AsyncController<T> with Logging {
     _stateController.close();
     _dataController.close();
     _errorController.close();
+    _observers.clear();
+    _currentTokenSource?.dispose();
   }
 
   Stream<AsyncState> get stateStream => _stateController.stream;
