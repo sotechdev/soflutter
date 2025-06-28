@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:soflutter/src/controllers/async_observer.dart';
+import 'package:soflutter/src/core/multi_stream_subscription.dart';
+
 import '../core/core.dart';
 import '../exceptions/cancelled_exception.dart';
 import 'async_state.dart';
@@ -15,6 +18,8 @@ class AsyncController<T> with Logging {
   Exception? _error;
   StackTrace? _stackTrace;
   CancellationToken? _currentToken;
+
+  final _observers = observers;
 
   AsyncController() {
     logger.verbose('[AsyncController] Created for type ${T.toString()}');
@@ -81,6 +86,48 @@ class AsyncController<T> with Logging {
 
     if (_state == AsyncState.error) {
       _errorController.add(_error);
+    }
+
+    _notifyObservers();
+  }
+
+  StreamSubscription<AsyncState> listen({
+    void Function(AsyncState state)? onState,
+    void Function(T? data)? onData,
+    void Function(Exception? error)? onError,
+  }){
+    final subscritions = <StreamSubscription>[];
+
+    if (onState != null){
+      subscritions.add(stateStream.listen(
+        onState));
+    }
+    if (onData != null){
+      subscritions.add(dataStream.listen(onData));
+    }
+    if (onError != null){
+      subscritions.add(errorStream.listen(onError));
+    }
+    return MultiStreamSubscription<AsyncState>(subscritions)
+      ..onData((state) {})
+      ..onError((error){});
+  }
+
+  void addObserver(AsyncObserver<T> observer){
+    _observers.add(observer);
+  }
+
+  void removeObserver(AsyncObserver<T> observer){
+    _observers.remove(observer);
+  }
+
+  void _notifyObservers(){
+    for (final observer in _observers){
+      observer.onState(_state);
+      observer.onData(_data);
+      if (_state == AsyncState.error){
+        observer.onError(_error);
+      }
     }
   }
 
