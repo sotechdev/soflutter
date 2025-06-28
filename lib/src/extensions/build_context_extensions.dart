@@ -3,4 +3,5 @@ import 'package:soflutter/src/core/provider.dart';
 
 extension BuildContextExtensions on BuildContext {
   T get<T extends Object>() => serviceProvider<T>();
+  ServiceProvider get services => serviceProvider;
 }
