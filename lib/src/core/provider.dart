@@ -4,7 +4,7 @@ import 'package:auto_injector/auto_injector.dart'
 class ServiceProvider {
   ServiceProvider._();
 
-  final injector = AutoInjector();
+  final _injector = AutoInjector();
 
   static final _instance = ServiceProvider._();
 
@@ -18,7 +18,7 @@ class ServiceProvider {
   /// to replace an instance with a mock in tests.
   /// <br>
   /// When [key] is provided it will search the instance that have the same key
-  T get<T>({ParamTransform? transform, String? key}) => injector.get<T>(
+  T get<T>({ParamTransform? transform, String? key}) => _injector.get<T>(
         transform: transform,
         key: key,
       );
@@ -30,7 +30,7 @@ class ServiceProvider {
   /// <br>
   /// When [key] is provided it will search the instance that have the same key
   T call<T>({ParamTransform? transform, String? key}) =>
-      injector.call(transform: transform, key: key);
+      _injector.call(transform: transform, key: key);
 
   /// Register a factory instance.
   /// A new instance will be generated whenever requested.
@@ -40,7 +40,7 @@ class ServiceProvider {
   /// <br>
   /// When [key] is provided this instance only can be found by key
   void add<T>(Function constructor, {BindConfig<T>? config, String? key}) =>
-      injector.add(constructor, config: config, key: key);
+      _injector.add(constructor, config: config, key: key);
 
   /// Register a instance.
   /// A concrete object (Not a function).
@@ -50,7 +50,7 @@ class ServiceProvider {
   /// <br>
   /// When [key] is provided this instance only can be found by key
   void addInstance<T>(T instance, {BindConfig<T>? config, String? key}) {
-    injector.addInstance(instance, config: config, key: key);
+    _injector.addInstance(instance, config: config, key: key);
   }
 
   /// Register a Singleton instance.
@@ -67,7 +67,7 @@ class ServiceProvider {
     BindConfig<T>? config,
     String? key,
   }) =>
-      injector.addSingleton(constructor, config: config, key: key);
+      _injector.addSingleton(constructor, config: config, key: key);
 
   /// Register a LazySingleton instance.
   /// It will generate a single instance for the duration of
@@ -83,18 +83,18 @@ class ServiceProvider {
     BindConfig<T>? config,
     String? key,
   }) =>
-      injector.addLazySingleton(constructor, config: config, key: key);
+      _injector.addLazySingleton(constructor, config: config, key: key);
 
-  void addBind<T>(Bind<T> bind) => injector.addBind(bind);
+  void addBind<T>(Bind<T> bind) => _injector.addBind(bind);
 
-  void commit() => injector.commit();
+  void commit() => _injector.commit();
 
-  void dispose() => injector.dispose();
+  void dispose() => _injector.dispose();
 
   /// Request an notifier property by [Type]
   /// <br>
   /// When [key] is provided it will search the instance that have the same key
-  dynamic getNotifier<T>({String? key}) => injector.getNotifier<T>(key: key);
+  dynamic getNotifier<T>({String? key}) => _injector.getNotifier<T>(key: key);
 }
 
 final serviceProvider = ServiceProvider();
