@@ -8,7 +8,7 @@ class AsyncControllerWhenBuilder<D> extends StatelessWidget {
   final Widget Function() initial;
   final Widget Function() loading;
   final Widget Function(D data) success;
-  final Widget Function(Exception error, StackTrace? stackTrace) error;
+  final Widget Function(Exception error) error;
   final Widget Function() cancelled;
 
   const AsyncControllerWhenBuilder({

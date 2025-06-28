@@ -39,7 +39,7 @@ class AsyncControllerWhenPage extends StatelessWidget {
                     leading: const Icon(Icons.check),
                   ),
                 ),
-                error: (error, stackTrace) => Center(
+                error: (error) => Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

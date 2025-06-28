@@ -9,7 +9,7 @@ extension AsyncControllerWidgetExtension<T> on AsyncController<T> {
     required Widget Function(BuildContext) initial,
     required Widget Function(BuildContext) loading,
     required Widget Function(BuildContext, T data) success,
-    required Widget Function(BuildContext, Exception error, StackTrace stackTrace) error,
+    required Widget Function(BuildContext, Exception error) error,
     required Widget Function(BuildContext) cancelled,
   }) {
     return StreamBuilder<AsyncState>(
@@ -19,7 +19,7 @@ extension AsyncControllerWidgetExtension<T> on AsyncController<T> {
           initial: () => initial(context),
           loading: () => loading(context),
           success: (data) => success(context, data),
-          error: (err, stack) => error(context, err, stack),
+          error: (err) => error(context, err),
           cancelled: () => cancelled(context),
         );
       },

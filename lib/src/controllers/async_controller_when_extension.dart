@@ -21,7 +21,7 @@ extension AsyncControllerWhenExtension<T> on AsyncController<T> {
     required R Function() initial,
     required R Function() loading,
     required R Function(T data) success,
-    required R Function(Exception error, StackTrace stackTrace) error,
+    required R Function(Exception error) error,
     required R Function() cancelled,
   }) {
     logger.verbose('[AsyncController] when() called for state $state');
@@ -33,7 +33,7 @@ extension AsyncControllerWhenExtension<T> on AsyncController<T> {
       case AsyncState.success:
         return success(currentData as T);
       case AsyncState.error:
-        return error(currentError!, currentStackTrace!);
+        return error(currentError!);
       case AsyncState.cancelled:
         return cancelled();
     }
@@ -66,7 +66,7 @@ extension AsyncControllerWhenExtension<T> on AsyncController<T> {
     required Widget Function(BuildContext) initial,
     required Widget Function(BuildContext) loading,
     required Widget Function(BuildContext, T data) success,
-    required Widget Function(BuildContext, Exception error, StackTrace stackTrace) error,
+    required Widget Function(BuildContext, Exception error) error,
     required Widget Function(BuildContext) cancelled,
   }) {
     return StreamBuilder<AsyncState>(
@@ -76,7 +76,7 @@ extension AsyncControllerWhenExtension<T> on AsyncController<T> {
           initial: () => initial(context),
           loading: () => loading(context),
           success: (data) => success(context, data),
-          error: (err, stack) => error(context, err, stack),
+          error: (err) => error(context, err),
           cancelled: () => cancelled(context),
         );
       },
